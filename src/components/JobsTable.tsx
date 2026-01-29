@@ -5,6 +5,7 @@ import {
 import type { Job } from "../types/job";
 import { useState } from "react";
 import { JobErrors } from "./JobErrors";
+import { downloadErrorReport } from "../api/jobs";
 
 function statusColor(status: Job["status"]) {
   switch (status) {
@@ -20,6 +21,32 @@ export function JobsTable(props: {
   loading: boolean;
 }) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [downloadErr, setDownloadErr] = useState<string | null>(null);
+
+  async function handleDownload(job: Job) {
+    if (!job.failedCount) return;
+
+    setDownloadingId(job._id);
+    setDownloadErr(null);
+    try {
+      const blob = await downloadErrorReport(job._id);
+      const url = URL.createObjectURL(blob);
+      const baseName = job.filename.replace(/\.[^/.]+$/, "") || "job";
+      const timestamp = new Date(job.createdAt).toISOString().replace(/[:.]/g, "-");
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${baseName}-errors-${timestamp}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setDownloadErr(e instanceof Error ? e.message : "Failed to download error report");
+    } finally {
+      setDownloadingId(null);
+    }
+  }
 
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>
@@ -33,6 +60,11 @@ export function JobsTable(props: {
       </Stack>
 
       {props.loading && <LinearProgress sx={{ mb: 2 }} />}
+      {downloadErr && (
+        <Typography color="error" variant="body2" sx={{ mb: 1 }}>
+          {downloadErr}
+        </Typography>
+      )}
 
       <Table size="small">
         <TableHead>
@@ -42,6 +74,7 @@ export function JobsTable(props: {
             <TableCell width={260}>Progress</TableCell>
             <TableCell>Success</TableCell>
             <TableCell>Failed</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
 
@@ -67,6 +100,15 @@ export function JobsTable(props: {
                   </TableCell>
                   <TableCell>{j.successCount}</TableCell>
                   <TableCell>{j.failedCount}</TableCell>
+                  <TableCell>
+                    <Button
+                      size="small"
+                      onClick={() => handleDownload(j)}
+                      disabled={j.failedCount === 0 || downloadingId === j._id}
+                    >
+                      {downloadingId === j._id ? "Preparing..." : "Download Error Report"}
+                    </Button>
+                  </TableCell>
                 </TableRow>
 
                 <TableRow>
