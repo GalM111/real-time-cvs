@@ -1,4 +1,3 @@
-/* 1. Global Reset & Variables */
 :root {
   --primary: #4f46e5;
   --bg-color: #f8fafc;
@@ -10,32 +9,21 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* Important for centering */
 }
 
-/* 2. Main Layout - The Centering Engine */
 .app {
-  /* Make the app take up the full screen height */
   min-height: 100vh;
   width: 100vw;
   position: relative;
-
-  /* Flexbox Centering */
   display: flex;
   flex-direction: column;
-  /* Stack children vertically */
   justify-content: center;
-  /* Center Vertically (Main Axis) */
   align-items: center;
-  /* Center Horizontally (Cross Axis) */
-
   background-color: var(--bg-color);
   font-family: sans-serif;
   overflow-x: hidden;
-  /* Prevent horizontal scroll */
 }
 
-/* 3. The Background Decoration */
 .app__bg {
   position: absolute;
   top: 0;
@@ -44,31 +32,22 @@ html {
   height: 50vh;
   background: linear-gradient(180deg, #e0e7ff 0%, transparent 100%);
   z-index: 0;
-  /* Send to back */
 }
 
-/* 4. The Content Container */
 .app__container {
   z-index: 1;
-  /* Bring to front */
   width: 100%;
-
-  /* Remove default margins that might push it off-center */
   margin: 0 !important;
-
-  /* Ensure it doesn't touch edges on mobile */
   padding-left: 16px;
   padding-right: 16px;
 }
 
-/* 5. Card Styling (From previous design) */
 .card {
   background: white !important;
   border-radius: 16px !important;
   border: 1px solid #e2e8f0 !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
   margin-bottom: 24px;
-  /* Spacing between cards */
 }
 
 .card__header {

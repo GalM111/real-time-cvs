@@ -8,7 +8,7 @@ export type Job = {
     processedRows: number;
     successCount: number;
     failedCount: number;
-    errors?: string[];       // or richer type if your backend stores row info
+    errors?: string[];
     createdAt: string;
     completedAt?: string;
 };

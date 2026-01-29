@@ -150,8 +150,8 @@ export function useJobs() {
             try {
                 const payload = JSON.parse((event as MessageEvent).data) as JobProgressMessage;
                 handleProgress(payload);
-            } catch {
-                // ignore malformed payloads
+            } catch (err) {
+                console.warn("Failed to parse progress payload", err);
             }
         });
 
@@ -159,8 +159,8 @@ export function useJobs() {
             try {
                 const payload = JSON.parse((event as MessageEvent).data) as JobDoneMessage;
                 handleDone(payload);
-            } catch {
-                // fallback to refresh to stay in sync
+            } catch (err) {
+                console.warn("Failed to parse done payload", err);
                 refresh();
             }
         });

@@ -11,11 +11,10 @@ export function getJob(id: string) {
 
 export async function uploadCsv(file: File) {
     const form = new FormData();
-    form.append("file", file); // make sure backend expects "file"
+    form.append("file", file);
     return api<UploadResponse>("/api/jobs/upload", { method: "POST", body: form });
 }
 
-// Optional bonus endpoint
 export async function downloadErrorReport(jobId: string) {
     const BASE = import.meta.env.VITE_API_BASE_URL ?? "";
     const res = await fetch(`${BASE}/api/jobs/${jobId}/error-report`);
