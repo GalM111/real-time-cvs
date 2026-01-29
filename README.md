@@ -44,8 +44,3 @@ Each job record should match `src/types/job.ts` and include progress counts plus
 - `src/components/JobsTable.tsx`: renders progress bars, metrics, and expandable error stacks.
 - `src/hooks/useJobs.ts`: encapsulates fetch, SSE stream management, and error handling.
 - `src/api/*.ts`: thin wrappers around the backend REST contract.
-
-## Future Enhancements
-- Add websocket-based push updates as an alternative to SSE.
-- Stream CSV validation feedback in real time while processing.
-- Surface richer analytics (per-column error rates, throughput charts, etc.).
